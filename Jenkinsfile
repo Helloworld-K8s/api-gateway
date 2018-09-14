@@ -2,7 +2,7 @@
 import java.text.SimpleDateFormat
 
 // pod utilisé pour la compilation du projet
-podTemplate(label: 'meltingpoc-api-gateway-pod', nodeSelector: 'medium', containers: [
+podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
         // le slave jenkins
         containerTemplate(name: 'jnlp', image: 'jenkinsci/jnlp-slave:alpine'),
@@ -20,7 +20,7 @@ podTemplate(label: 'meltingpoc-api-gateway-pod', nodeSelector: 'medium', contain
         volumes: [hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')]
 ) {
 
-    node('meltingpoc-api-gateway-pod') {
+    node('api-gateway-pod') {
 
         def branch = env.JOB_NAME.replaceFirst('.+/', '');
 
@@ -74,10 +74,10 @@ podTemplate(label: 'meltingpoc-api-gateway-pod', nodeSelector: 'medium', contain
 
             stage('RUN') {
 
-                build job: '/SOFTEAMOUEST/chart-run/master', parameters: [
+                build job: '/Helloworld-K8s/chart-run/master', parameters: [
                         string(name: 'image', value: "$now"),
                         string(name: 'chart', value: "api-gateway"),
-                        string(name: 'alias', value: "meltingpoc")], wait: false
+                        string(name: 'alias', value: "helloworld-k8s")], wait: false
             }
         }
     }

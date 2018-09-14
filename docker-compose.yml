@@ -2,6 +2,6 @@ version: '3.2'
 services:
 
   api-gateway:
-    image: "registry.k8.wildwidewest.xyz/repository/docker-repository/pocs/meltingpoc-api-gateway:${tag}"
+    image: "registry.k8.wildwidewest.xyz/repository/docker-repository/api-gateway:${tag}"
     build: .
 
