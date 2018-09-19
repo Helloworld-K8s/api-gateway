@@ -6,6 +6,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.sonarqube'
 apply plugin: 'maven-publish'
+apply plugin: 'net.researchgate.release'
 
 jar.archiveName = 'api-gateway.jar'
 
@@ -43,6 +44,7 @@ buildscript {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
         classpath 'io.spring.gradle:dependency-management-plugin:0.5.6.RELEASE'
         classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2'
+        classpath 'net.researchgate:gradle-release:2.6.0'
     }
 }
 
@@ -90,4 +92,8 @@ publishing {
             }
         }
     }
+}
+
+release {
+
 }
