@@ -1,15 +1,6 @@
 group 'com.softeam'
 version '1.0.0-SNAPSHOT'
 
-apply plugin: 'kotlin'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'org.sonarqube'
-apply plugin: 'maven-publish'
-apply plugin: 'net.researchgate.release'
-
-jar.archiveName = 'api-gateway.jar'
-
 repositories {
     maven {
         url 'https://nexus.k8.wildwidewest.xyz/repository/maven-public/'
@@ -47,6 +38,15 @@ buildscript {
         classpath 'net.researchgate:gradle-release:2.6.0'
     }
 }
+
+apply plugin: 'kotlin'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.sonarqube'
+apply plugin: 'maven-publish'
+//apply plugin: 'net.researchgate.release'
+
+bootJar.archiveName = 'api-gateway.jar'
 
 dependencyManagement {
     imports {
@@ -92,8 +92,4 @@ publishing {
             }
         }
     }
-}
-
-release {
-
 }
