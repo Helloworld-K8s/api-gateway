@@ -92,3 +92,7 @@ publishing {
         }
     }
 }
+
+release {
+    versionPropertyFile = 'version.properties'
+}
