@@ -70,15 +70,18 @@ compileTestKotlin {
 publishing {
     publications {
         maven(MavenPublication) {
-            //groupId = 'org.gradle.sample'
-            //artifactId = 'project1-sample'
-            //version = '1.1'
 
             from components.java
 
             repositories {
                 maven {
-                    url 'https://nexus.k8.wildwidewest.xyz/repository/maven-snapshots/'
+
+                    if (project.version.endsWith('-SNAPSHOT')) {
+                        url "https://nexus.k8.wildwidewest.xyz/repository/maven-snapshots/"
+                    } else {
+                        url "https://nexus.k8.wildwidewest.xyz/repository/maven-releases/"
+                    }
+
                     credentials {
                         username nexusUsername
                         password nexusPassword
