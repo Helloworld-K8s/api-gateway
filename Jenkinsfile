@@ -25,6 +25,10 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
         def branch = env.JOB_NAME.replaceFirst('.+/', '');
 
         properties([
+                parameters([
+                        booleanParam(defaultValue: false, description: '', name: 'DO_RELEASE'),
+                        string(defaultValue: '', description: '', name: 'RELEASE_VERSION', trim: false),
+                        string(defaultValue: '', description: '', name: 'RELEASE_NEW_VERSION', trim: false)]),
                 buildDiscarder(
                         logRotator(
                                 artifactDaysToKeepStr: '1',
@@ -47,7 +51,12 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                 withCredentials([string(credentialsId: 'sonarqube_token', variable: 'token')]) {
 
                     configFileProvider([configFile(fileId: 'gradle.properties', targetLocation: 'gradle.properties')]) {
-                        sh 'gradle clean build -Dsonar.login=${token}'
+
+                        if (!params.DO_RELEASE) {
+                            sh 'gradle clean build -Dsonar.login=${token}'
+                        } else {
+                            sh "gradle release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${params.RELEASE_VERSION} -Prelease.newVersion=${params.RELEASE_VERSION}"
+                        }
                     }
                 }
             }
