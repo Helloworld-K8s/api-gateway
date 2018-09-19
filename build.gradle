@@ -94,5 +94,6 @@ publishing {
 }
 
 release {
+    failOnUnversionedFiles = false
     versionPropertyFile = 'version.properties'
 }
