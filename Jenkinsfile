@@ -45,7 +45,10 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
             stage('BUILD SOURCES') {
                 withCredentials([string(credentialsId: 'sonarqube_token', variable: 'token')]) {
-                    sh 'gradle clean build -Dsonar.login=${token}'
+
+                    configFileProvider([configFile(fileId: 'gradle.properties', targetLocation: 'gradle.properties')]) {
+                        sh 'gradle clean build -Dsonar.login=${token}'
+                    }
                 }
             }
         }

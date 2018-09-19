@@ -12,8 +12,8 @@ repositories {
     maven {
         url "https://nexus.k8.wildwidewest.xyz/repository/maven-public/"
         credentials {
-            username "admin"
-            password "softeam44"
+            username nexusUsername
+            password nexusPassword
         }
     }
 }
