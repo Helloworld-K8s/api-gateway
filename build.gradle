@@ -44,7 +44,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.sonarqube'
 apply plugin: 'maven-publish'
-//apply plugin: 'net.researchgate.release'
+apply plugin: 'net.researchgate.release'
 
 bootJar.archiveName = 'api-gateway.jar'
 
