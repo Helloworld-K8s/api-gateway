@@ -72,7 +72,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                             sh 'git config --global user.name "Jenkins Release"'
 
                             try {
-                                sh "gradle release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${params.RELEASE_VERSION} -Prelease.newVersion=${params.RELEASE_VERSION}"
+                                sh "gradle release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${params.RELEASE_VERSION} -Prelease.newVersion=${params.RELEASE_NEW_VERSION}"
                             }
                             catch (e){
                                 sh 'sleep 3600'
