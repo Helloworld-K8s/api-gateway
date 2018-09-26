@@ -58,7 +58,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
                         if (!params.DO_RELEASE) {
 
-                            sh 'gradle getVersion()'
+                            sh "gradle getVersion()"
 
                             now = "1.0.2-SNAPSHOT"
 
