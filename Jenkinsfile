@@ -4,101 +4,101 @@ import java.text.SimpleDateFormat
 // pod utilisé pour la compilation du projet
 podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
-        // le slave jenkins
-        containerTemplate(name: 'jnlp', image: 'jenkinsci/jnlp-slave:alpine'),
+		// le slave jenkins
+		containerTemplate(name: 'jnlp', image: 'jenkinsci/jnlp-slave:alpine'),
 
-        // un conteneur pour le build maven
-        containerTemplate(name: 'gradle', image: 'elkouhen/gradle-docker', privileged: true, ttyEnabled: true, command: 'cat'),
+		// un conteneur pour le build maven
+		containerTemplate(name: 'gradle', image: 'elkouhen/gradle-docker', privileged: true, ttyEnabled: true, command: 'cat'),
 
-        // un conteneur pour construire les images docker
-        containerTemplate(name: 'docker', image: 'tmaier/docker-compose', command: 'cat', ttyEnabled: true),
+		// un conteneur pour construire les images docker
+		containerTemplate(name: 'docker', image: 'tmaier/docker-compose', command: 'cat', ttyEnabled: true),
 
-        // un conteneur pour déployer les services kubernetes
-        containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl', command: 'cat', ttyEnabled: true)],
+		// un conteneur pour déployer les services kubernetes
+		containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl', command: 'cat', ttyEnabled: true)],
 
-        // montage nécessaire pour que le conteneur docker fonction (Docker In Docker)
-        volumes: [hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')]
-) {
+		// montage nécessaire pour que le conteneur docker fonction (Docker In Docker)
+		volumes: [hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')]
+	   ) {
 
-    node('api-gateway-pod') {
+	node('api-gateway-pod') {
 
-        def branch = env.JOB_NAME.replaceFirst('.+/', '');
+		def branch = env.JOB_NAME.replaceFirst('.+/', '');
 
-        properties([
-                parameters([
-                        booleanParam(defaultValue: false, description: '', name: 'DO_RELEASE'),
-                        string(defaultValue: '', description: '', name: 'RELEASE_VERSION', trim: false),
-                        string(defaultValue: '', description: '', name: 'RELEASE_NEW_VERSION', trim: false)]),
-                buildDiscarder(
-                        logRotator(
-                                artifactDaysToKeepStr: '1',
-                                artifactNumToKeepStr: '1',
-                                daysToKeepStr: '3',
-                                numToKeepStr: '3'
-                        )
-                )
-        ])
+		properties([
+				parameters([
+					booleanParam(defaultValue: false, description: '', name: 'DO_RELEASE'),
+					string(defaultValue: '', description: '', name: 'RELEASE_VERSION', trim: false),
+					string(defaultValue: '', description: '', name: 'RELEASE_NEW_VERSION', trim: false)]),
+				buildDiscarder(
+					logRotator(
+						artifactDaysToKeepStr: '1',
+						artifactNumToKeepStr: '1',
+						daysToKeepStr: '3',
+						numToKeepStr: '3'
+						)
+					)
+		])
 
-        def now = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())
+			def now = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())
 
-        stage('CHECKOUT') {
-            checkout scm
-        }
+			stage('CHECKOUT') {
+				checkout scm
+			}
 
-        container('gradle') {
+		container('gradle') {
 
-            stage('BUILD SOURCES') {
-                withCredentials([string(credentialsId: 'sonarqube_token', variable: 'token')]) {
+			stage('BUILD SOURCES') {
+				withCredentials([string(credentialsId: 'sonarqube_token', variable: 'token')]) {
 
-                    configFileProvider([configFile(fileId: 'gradle.properties', targetLocation: "gradle.properties"),
-                                        configFile(fileId: 'id_rsa', targetLocation: "/home/jenkins/.ssh/id_rsa"),
-                                        configFile(fileId: 'id_rsa.pub', targetLocation: "/home/jenkins/.ssh/id_rsa.pub")
+					configFileProvider([configFile(fileId: 'gradle.properties', targetLocation: "gradle.properties"),
+							configFile(fileId: 'id_rsa', targetLocation: "/home/jenkins/.ssh/id_rsa"),
+							configFile(fileId: 'id_rsa.pub', targetLocation: "/home/jenkins/.ssh/id_rsa.pub")
 
-                    ]) {
+					]) {
 
-                        if (!params.DO_RELEASE) {
-                            sh 'gradle clean build -Dsonar.login=${token}'
-                        } else {
+						if (!params.DO_RELEASE) {
+							sh 'gradle clean build -Dsonar.login=${token}'
+						} else {
 
-                            //sh "git config --global user.email 'mehdi.elkouhen@gmail.com'"
-                            //sh "git config --global user.name 'Mehdi EL KOUHEN'"
+							//sh "git config --global user.email 'mehdi.elkouhen@gmail.com'"
+							//sh "git config --global user.name 'Mehdi EL KOUHEN'"
 
-                            sh "gradle release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${params.RELEASE_VERSION} -Prelease.newVersion=${params.RELEASE_VERSION} --debug"
-                        }
-                    }
-                }
-            }
-        }
+							sh "gradle release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${params.RELEASE_VERSION} -Prelease.newVersion=${params.RELEASE_VERSION}"
+						}
+					}
+				}
+			}
+		}
 
-        container('docker') {
+		container('docker') {
 
-            stage('BUILD DOCKER IMAGE') {
+			stage('BUILD DOCKER IMAGE') {
 
-                sh 'mkdir /etc/docker'
+				sh 'mkdir /etc/docker'
 
-                // le registry est insecure (pas de https)
-                sh 'echo {"insecure-registries" : ["registry.k8.wildwidewest.xyz"]} > /etc/docker/daemon.json'
+					// le registry est insecure (pas de https)
+					sh 'echo {"insecure-registries" : ["registry.k8.wildwidewest.xyz"]} > /etc/docker/daemon.json'
 
-                withCredentials([usernamePassword(credentialsId: 'nexus_user', usernameVariable: 'username', passwordVariable: 'password')]) {
+					withCredentials([usernamePassword(credentialsId: 'nexus_user', usernameVariable: 'username', passwordVariable: 'password')]) {
 
-                    sh "docker login -u ${username} -p ${password} registry.k8.wildwidewest.xyz"
-                }
+						sh "docker login -u ${username} -p ${password} registry.k8.wildwidewest.xyz"
+					}
 
-                sh "tag=$now docker-compose build"
+				sh "tag=$now docker-compose build"
 
-                sh "tag=$now docker-compose push"
-            }
-        }
+					sh "tag=$now docker-compose push"
+			}
+		}
 
-        container('kubectl') {
+		container('kubectl') {
 
-            stage('RUN') {
+			stage('RUN') {
 
-                build job: '/Helloworld-K8s/chart-run/master', parameters: [
-                        string(name: 'image', value: "$now"),
-                        string(name: 'chart', value: "api-gateway"),
-                        string(name: 'alias', value: "helloworld-k8s")], wait: false
-            }
-        }
-    }
+				build job: '/Helloworld-K8s/chart-run/master', parameters: [
+					string(name: 'image', value: "$now"),
+					string(name: 'chart', value: "api-gateway"),
+					string(name: 'alias', value: "helloworld-k8s")], wait: false
+			}
+		}
+	}
 }
