@@ -60,6 +60,8 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
                             now = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true)
 
+                            sh "echo $now"
+
                             // now = "1.0.2-SNAPSHOT"
 
                             sh 'gradle clean build -Dsonar.login=${token}'
