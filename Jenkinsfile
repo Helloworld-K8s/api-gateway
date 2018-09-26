@@ -56,12 +56,8 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
                         if (!params.DO_RELEASE) {
 
-                            now = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true)
-
                             sh 'gradle clean build publish -Dsonar.login=${token}'
                         } else {
-
-                            now = params.RELEASE_VERSION
 
                             sh 'mkdir /root/.ssh'
 
