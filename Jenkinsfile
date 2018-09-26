@@ -63,6 +63,9 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                         sh 'chmod 600 /root/.ssh/id_rsa'
                         sh 'chmod 644 /root/.ssh/id_rsa.pub'
 
+                        sh 'git config --global user.email "mehdi.elkouhen@gmail.com"'
+                        sh 'git config --global user.name "Jenkins Release"'
+
                         if (!params.DO_RELEASE) {
                             sh 'gradle clean build -Dsonar.login=${token}'
                         } else {
