@@ -39,7 +39,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                 )
         ])
 
-        def now = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())
+        def now = ""
 
         stage('CHECKOUT') {
             checkout scm
@@ -57,8 +57,13 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                     ]) {
 
                         if (!params.DO_RELEASE) {
+
+                            now = sh script: "gradle getVersion()", returnStdout: true
+
                             sh 'gradle clean build -Dsonar.login=${token}'
                         } else {
+
+                            now = params.RELEASE_VERSION
 
                             sh 'mkdir /root/.ssh'
 
