@@ -33,7 +33,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                         logRotator(
                                 artifactDaysToKeepStr: '1',
                                 artifactNumToKeepStr: '1',
-                                daysToKeepStr: '2',
+                                daysToKeepStr: '3',
                                 numToKeepStr: '3'
                         )
                 )
