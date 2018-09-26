@@ -39,8 +39,6 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                 )
         ])
 
-        def now = ""
-
         stage('CHECKOUT') {
             checkout scm
         }
@@ -59,10 +57,6 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                         if (!params.DO_RELEASE) {
 
                             now = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true)
-
-                            sh "echo $now"
-
-                            // now = "1.0.2-SNAPSHOT"
 
                             sh 'gradle clean build -Dsonar.login=${token}'
                         } else {
@@ -103,6 +97,8 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
                     sh "docker login -u ${username} -p ${password} registry.k8.wildwidewest.xyz"
                 }
+
+                def now = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true)
 
                 sh "tag=$now docker-compose build"
 
