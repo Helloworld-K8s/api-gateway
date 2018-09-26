@@ -56,9 +56,9 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
 					]) {
 
-						sh 'whoami'
-
-						sh 'chown -R jenkins:jenkins /home/jenkins/.ssh'
+						sh 'mkdir /root/.ssh'
+						sh 'cp -R /home/jenkins/.ssh/id_rsa /root/.ssh/id_rsa'
+						sh 'cp -R /home/jenkins/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub'
 
 						if (!params.DO_RELEASE) {
 							sh 'gradle clean build -Dsonar.login=${token}'
