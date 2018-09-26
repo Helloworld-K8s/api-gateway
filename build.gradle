@@ -75,6 +75,7 @@ publishing {
         maven(MavenPublication) {
 
             from components.java
+            artifactId = bootJar.archiveName
 
             repositories {
                 maven {
