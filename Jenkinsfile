@@ -55,15 +55,13 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                                         configFile(fileId: 'id_rsa.pub', targetLocation: "/home/jenkins/.ssh/id_rsa.pub")
 
                     ]) {
-
                         sh 'mkdir /root/.ssh'
 
-                        sh 'chown -R root:root /home/jenkins'
+                        sh 'cp /home/jenkins/.ssh/id_rsa /root/.ssh/id_rsa'
+                        sh 'cp /home/jenkins/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub'
+
                         sh 'chmod 600 /home/jenkins/.ssh/id_rsa'
                         sh 'chmod 644 /home/jenkins/.ssh/id_rsa.pub'
-
-                        sh 'cp -R /home/jenkins/.ssh/id_rsa /root/.ssh/id_rsa'
-                        sh 'cp -R /home/jenkins/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub'
 
                         if (!params.DO_RELEASE) {
                             sh 'gradle clean build -Dsonar.login=${token}'
