@@ -74,13 +74,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                             sh 'git config --global user.email "mehdi.elkouhen@gmail.com"'
                             sh 'git config --global user.name "Jenkins Release"'
 
-                            try {
-
-                                sh "gradle release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${params.RELEASE_VERSION} -Prelease.newVersion=${params.RELEASE_NEW_VERSION}"
-                            }
-                            catch (e){
-                                sh 'sleep 3600'
-                            }
+                            sh "gradle release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${params.RELEASE_VERSION} -Prelease.newVersion=${params.RELEASE_NEW_VERSION}"
                         }
                     }
                 }
