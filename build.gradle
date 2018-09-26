@@ -1,9 +1,5 @@
 group 'com.softeam'
 
-processResources {
-    expand(version.properties)
-}
-
 repositories {
     maven {
         url 'https://nexus.k8.wildwidewest.xyz/repository/maven-public/'
@@ -48,6 +44,10 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.sonarqube'
 apply plugin: 'maven-publish'
 apply plugin: 'net.researchgate.release'
+
+processResources {
+    expand(version.properties)
+}
 
 bootJar.archiveName = 'api-gateway.jar'
 
