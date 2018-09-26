@@ -57,8 +57,10 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                     ]) {
 
                         if (!params.DO_RELEASE) {
+                            
+                            sh 'cat version.properties | awk -F"=" "{print $2}" > /tmp/version'
 
-                            now = "1.0.2.SNAPSHOT" // sh (script: 'gradle getVersion()', returnStdout: true)
+                            now = readFile '/tmp/version'
 
                             sh 'gradle clean build -Dsonar.login=${token}'
                         } else {
