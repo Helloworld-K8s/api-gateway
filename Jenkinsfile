@@ -8,7 +8,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
         containerTemplate(name: 'jnlp', image: 'jenkinsci/jnlp-slave:alpine'),
 
         // un conteneur pour le build maven
-        containerTemplate(name: 'gradle', image: 'elkouhen/gradle-docker', privileged: true, ttyEnabled: true, command: 'cat'),
+        containerTemplate(name: 'gradle', image: 'gradle:4.10-jre10', privileged: true, ttyEnabled: true, command: 'cat'),
 
         // un conteneur pour construire les images docker
         containerTemplate(name: 'docker', image: 'tmaier/docker-compose', command: 'cat', ttyEnabled: true),
@@ -65,7 +65,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                             sh 'cp /home/jenkins/.ssh/id_rsa /root/.ssh/id_rsa'
                             sh 'cp /home/jenkins/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub'
 
-                            echo "StrictHostKeyChecking no" > /root/.ssh/config
+                            sh 'echo "StrictHostKeyChecking no" > /root/.ssh/config'
 
                             sh 'chmod 600 /root/.ssh/id_rsa'
                             sh 'chmod 644 /root/.ssh/id_rsa.pub'
