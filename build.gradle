@@ -1,6 +1,6 @@
 group 'com.softeam'
 
-version = rootProject.file('version.properties').text.trim()
+version = rootProject.file('version.properties').text.replace("version=", "").trim()
 
 repositories {
     maven {
