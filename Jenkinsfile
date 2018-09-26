@@ -57,8 +57,8 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                     ]) {
 
                         if (!params.DO_RELEASE) {
-                            
-                            sh 'cat version.properties | awk -F"=" "{print $2}" > /tmp/version'
+
+                            sh 'cat version.properties | awk -F"=" "{print \$2}" > /tmp/version'
 
                             now = readFile '/tmp/version'
 
