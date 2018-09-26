@@ -98,11 +98,11 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                     sh "docker login -u ${username} -p ${password} registry.k8.wildwidewest.xyz"
                 }
 
-                def now = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true)
+                def tag = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true)
 
-                sh "tag=$now docker-compose build"
+                sh "tag=$tag docker-compose build"
 
-                sh "tag=$now docker-compose push"
+                sh "tag=$tag docker-compose push"
             }
         }
 
