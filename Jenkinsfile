@@ -28,7 +28,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                 parameters([
                         booleanParam(defaultValue: false, description: '', name: 'DO_RELEASE'),
                         string(defaultValue: '', description: '', name: 'RELEASE_VERSION', trim: false),
-                        string(defaultValue: '', description: '', name: 'RELEASE_NEW_VERSION', trim: false)]),
+                        string(defaultValue: '', description: '', name: 'NEXT_DEV_VERSION', trim: false)]),
                 buildDiscarder(
                         logRotator(
                                 artifactDaysToKeepStr: '1',
@@ -81,7 +81,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                             sh 'git config --global user.email "mehdi.elkouhen@gmail.com"'
                             sh 'git config --global user.name "Jenkins Release"'
 
-                            sh "gradle release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${params.RELEASE_VERSION} -Prelease.newVersion=${params.RELEASE_NEW_VERSION}"
+                            sh "gradle release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${params.RELEASE_VERSION} -Prelease.newVersion=${params.NEXT_DEV_VERSION}"
                         }
                     }
                 }
