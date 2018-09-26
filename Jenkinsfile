@@ -65,8 +65,11 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                             sh 'cp /home/jenkins/.ssh/id_rsa /root/.ssh/id_rsa'
                             sh 'cp /home/jenkins/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub'
 
+                            echo "StrictHostKeyChecking no" > /root/.ssh/config
+
                             sh 'chmod 600 /root/.ssh/id_rsa'
                             sh 'chmod 644 /root/.ssh/id_rsa.pub'
+                            sh 'chmod 644 /root/.ssh/config'
 
                             sh 'git config --global user.email "mehdi.elkouhen@gmail.com"'
                             sh 'git config --global user.name "Jenkins Release"'
