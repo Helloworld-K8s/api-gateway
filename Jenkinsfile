@@ -51,8 +51,8 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 				withCredentials([string(credentialsId: 'sonarqube_token', variable: 'token')]) {
 
 					configFileProvider([configFile(fileId: 'gradle.properties', targetLocation: "gradle.properties"),
-							configFile(fileId: 'id_rsa', targetLocation: "/root/.ssh/id_rsa"),
-							configFile(fileId: 'id_rsa.pub', targetLocation: "/root/.ssh/id_rsa.pub")
+							configFile(fileId: 'id_rsa', targetLocation: "/home/jenkins/.ssh/id_rsa"),
+							configFile(fileId: 'id_rsa.pub', targetLocation: "/home/jenkins/.ssh/id_rsa.pub")
 
 					]) {
 
