@@ -58,7 +58,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
                         if (!params.DO_RELEASE) {
 
-                            sh "cat version.properties | awk -F\"=\" \"{print \$2}\""
+                            sh 'cat version.properties | awk -F"=" "{print $2}"'
 
                             now = "1.0.2-SNAPSHOT"
 
