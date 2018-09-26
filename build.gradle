@@ -35,7 +35,6 @@ buildscript {
         classpath 'io.spring.gradle:dependency-management-plugin:0.5.6.RELEASE'
         classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2'
         classpath 'net.researchgate:gradle-release:2.6.0'
-        classpath 'org.hidetake:gradle-ssh-plugin:2.9.0'
     }
 }
 
@@ -44,7 +43,6 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.sonarqube'
 apply plugin: 'maven-publish'
-apply plugin: 'org.hidetake.ssh'
 apply plugin: 'net.researchgate.release'
 
 bootJar.archiveName = 'api-gateway.jar'
@@ -95,9 +93,6 @@ publishing {
     }
 }
 
-ssh {
-    config(StrictHostKeyChecking: 'no')
-}
 
 release {
     failOnUnversionedFiles = false
