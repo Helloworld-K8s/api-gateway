@@ -47,7 +47,7 @@ apply plugin: 'org.sonarqube'
 apply plugin: 'maven-publish'
 apply plugin: 'net.researchgate.release'
 
-bootJar.archiveName = 'api-gateway.jar'
+//bootJar.archiveName = 'api-gateway.jar'
 
 dependencyManagement {
     imports {
@@ -75,7 +75,6 @@ publishing {
         maven(MavenPublication) {
 
             from components.java
-            artifactId = bootJar.archiveName
 
             repositories {
                 maven {
