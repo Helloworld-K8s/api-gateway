@@ -100,9 +100,9 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
                 def tag = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true)
 
-                sh "tag=$tag.result docker-compose build"
+                sh "tag=$tag docker-compose build"
 
-                sh "tag=$tag.result docker-compose push"
+                sh "tag=$tag docker-compose push"
             }
         }
 
