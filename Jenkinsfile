@@ -98,13 +98,15 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                     sh "docker login -u ${username} -p ${password} registry.k8.wildwidewest.xyz"
                 }
 
-                def tag = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true).trim()
+                if (!params.DO_RELEASE) {
+                    now = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true)
 
-                sh "echo ${tag}"
+                    sh 'gradle clean build publish -Dsonar.login=${token}'
+                } else {
+                    sh "tag=${params.RELEASE_VERSION} docker-compose build"
 
-                sh "tag=${tag} docker-compose build"
-
-                sh "tag=${tag} docker-compose push"
+                    sh "tag=${params.RELEASE_VERSION} docker-compose push"
+                }
             }
         }
 
