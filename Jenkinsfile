@@ -61,7 +61,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                         sh 'cp -R /home/jenkins/.ssh/id_rsa /root/.ssh/id_rsa'
                         sh 'cp -R /home/jenkins/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub'
                         sh 'chmod 600 /root/.ssh/id_rsa'
-                        sh 'chmod 640 /root/.ssh/id_rsa.pub'
+                        sh 'chmod 644 /root/.ssh/id_rsa.pub'
 
                         if (!params.DO_RELEASE) {
                             sh 'gradle clean build -Dsonar.login=${token}'
