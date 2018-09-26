@@ -8,7 +8,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
         containerTemplate(name: 'jnlp', image: 'jenkinsci/jnlp-slave:alpine'),
 
         // un conteneur pour le build maven
-        containerTemplate(name: 'gradle', image: 'gradle:4.10-jre10', privileged: true, ttyEnabled: true, command: 'cat'),
+        containerTemplate(name: 'gradle', image: 'elkouhen/gradle-docker', privileged: true, ttyEnabled: true, command: 'cat'),
 
         // un conteneur pour construire les images docker
         containerTemplate(name: 'docker', image: 'tmaier/docker-compose', command: 'cat', ttyEnabled: true),
@@ -76,8 +76,6 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
                             try {
 
-                                sh "pwd"
-                                
                                 sh "gradle release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${params.RELEASE_VERSION} -Prelease.newVersion=${params.RELEASE_NEW_VERSION}"
                             }
                             catch (e){
