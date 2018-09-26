@@ -98,7 +98,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                     sh "docker login -u ${username} -p ${password} registry.k8.wildwidewest.xyz"
                 }
 
-                def tag = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true)
+                def tag = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true).trim()
 
                 sh "echo ${tag}"
 
