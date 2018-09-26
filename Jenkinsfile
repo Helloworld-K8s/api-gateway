@@ -55,23 +55,23 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                                         configFile(fileId: 'id_rsa.pub', targetLocation: "/home/jenkins/.ssh/id_rsa.pub")
 
                     ]) {
-                        sh 'mkdir /root/.ssh'
-
-                        sh 'cp /home/jenkins/.ssh/id_rsa /root/.ssh/id_rsa'
-                        sh 'cp /home/jenkins/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub'
-
-                        sh 'chmod 600 /root/.ssh/id_rsa'
-                        sh 'chmod 644 /root/.ssh/id_rsa.pub'
-
-                        sh 'git config --global user.email "mehdi.elkouhen@gmail.com"'
-                        sh 'git config --global user.name "Jenkins Release"'
 
                         if (!params.DO_RELEASE) {
                             sh 'gradle clean build -Dsonar.login=${token}'
                         } else {
 
-                            //sh "git config --global user.email 'mehdi.elkouhen@gmail.com'"
-                            //sh "git config --global user.name 'Mehdi EL KOUHEN'"
+                            sh 'mkdir /root/.ssh'
+
+                            sh 'cp /home/jenkins/.ssh/id_rsa /root/.ssh/id_rsa'
+                            sh 'cp /home/jenkins/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub'
+
+                            sh 'chmod 600 /root/.ssh/id_rsa'
+                            sh 'chmod 644 /root/.ssh/id_rsa.pub'
+
+                            sh 'git config --global user.email "mehdi.elkouhen@gmail.com"'
+                            sh 'git config --global user.name "Jenkins Release"'
+
+                            sh 'sleep 3600'
 
                             sh "gradle release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${params.RELEASE_VERSION} -Prelease.newVersion=${params.RELEASE_VERSION}"
                         }
