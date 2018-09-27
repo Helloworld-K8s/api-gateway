@@ -1,6 +1,8 @@
 @Library('deploy-library')
 import com.softeam.deploy.DeployHelper
 
+def utils = new DeployHelper(this)
+
 // pod utilisé pour la compilation du projet
 podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
@@ -54,15 +56,15 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
                     ]) {
 
-                        new DeployHelper().configureGIT(sh)
-                        new DeployHelper().configureDockerRegistry(sh)
+                        utils.configureGIT()
+                        utils.configureDockerRegistry()
 
                         if (!params.DO_RELEASE) {
 
                             sh 'gradle clean build publish -Dsonar.login=${token}'
                         } else {
 
-                            new DeployHelper().configureGIT(sh)
+                            utils.configureGIT()
 
                             sh "gradle release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${params.RELEASE_VERSION} -Prelease.newVersion=${params.NEXT_DEV_VERSION}"
                         }
@@ -75,7 +77,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
             stage('BUILD DOCKER IMAGE') {
 
-                new DeployHelper().configureDockerRegistry(sh)
+                utils.configureDockerRegistry()
 
                 withCredentials([usernamePassword(credentialsId: 'nexus_user', usernameVariable: 'username', passwordVariable: 'password')]) {
 
