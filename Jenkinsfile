@@ -74,6 +74,11 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
                 DeployHelper.instance.configureDockerRegistry()
 
+                withCredentials([usernamePassword(credentialsId: 'nexus_user', usernameVariable: 'username', passwordVariable: 'password')]) {
+
+                    sh "docker login -u ${username} -p ${password} registry.k8.wildwidewest.xyz"
+                }
+
                 String now = ""
 
                 if (!params.DO_RELEASE) {
