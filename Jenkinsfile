@@ -74,6 +74,8 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
                 DeployHelper.instance.configureDockerRegistry()
 
+                String now = ""
+
                 if (!params.DO_RELEASE) {
                     now = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true)
 
