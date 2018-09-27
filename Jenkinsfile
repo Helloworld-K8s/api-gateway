@@ -59,7 +59,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                             sh 'gradle clean build publish -Dsonar.login=${token}'
                         } else {
 
-                            DeployHelper.instance.configureGIT()
+                            new DeployHelper().configureGIT()
 
                             sh "gradle release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${params.RELEASE_VERSION} -Prelease.newVersion=${params.NEXT_DEV_VERSION}"
                         }
@@ -72,7 +72,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
             stage('BUILD DOCKER IMAGE') {
 
-                DeployHelper.instance.configureDockerRegistry()
+                new DeployHelper().configureDockerRegistry()
 
                 withCredentials([usernamePassword(credentialsId: 'nexus_user', usernameVariable: 'username', passwordVariable: 'password')]) {
 
