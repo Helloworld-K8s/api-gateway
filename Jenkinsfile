@@ -55,9 +55,6 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
                     ]) {
 
-                        utils.configureGIT()
-                        utils.configureDockerRegistry()
-
                         if (!params.DO_RELEASE) {
 
                             sh 'gradle clean build publish -Dsonar.login=${token}'
