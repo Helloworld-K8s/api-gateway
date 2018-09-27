@@ -1,5 +1,5 @@
-#!groovy
-import java.text.SimpleDateFormat
+@Library('deploy-library')
+import com.softeam.deploy.DeployHelper
 
 // pod utilisé pour la compilation du projet
 podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
@@ -59,19 +59,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                             sh 'gradle clean build publish -Dsonar.login=${token}'
                         } else {
 
-                            sh 'mkdir /root/.ssh'
-
-                            sh 'cp /home/jenkins/.ssh/id_rsa /root/.ssh/id_rsa'
-                            sh 'cp /home/jenkins/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub'
-
-                            sh 'echo "StrictHostKeyChecking no" > /root/.ssh/config'
-
-                            sh 'chmod 600 /root/.ssh/id_rsa'
-                            sh 'chmod 644 /root/.ssh/id_rsa.pub'
-                            sh 'chmod 644 /root/.ssh/config'
-
-                            sh 'git config --global user.email "mehdi.elkouhen@gmail.com"'
-                            sh 'git config --global user.name "Jenkins Release"'
+                            DeployHelper.instance().configureGIT()
 
                             sh "gradle release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${params.RELEASE_VERSION} -Prelease.newVersion=${params.NEXT_DEV_VERSION}"
                         }
