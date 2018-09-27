@@ -57,8 +57,6 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
                     ]) {
 
-                        utils.configureDockerRegistry()
-                        
                         if (!params.DO_RELEASE) {
 
                             sh 'gradle clean build publish -Dsonar.login=${token}'
@@ -78,6 +76,11 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
             stage('BUILD DOCKER IMAGE') {
 
                 utils.configureDockerRegistry()
+
+                withCredentials([usernamePassword(credentialsId: 'nexus_user', usernameVariable: 'username', passwordVariable: 'password')]) {
+
+                    sh "docker login -u ${username} -p ${password} registry.k8.wildwidewest.xyz"
+                }
 
                 if (!params.DO_RELEASE) {
                     now = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true).trim()
