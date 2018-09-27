@@ -83,14 +83,14 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                 String now = ""
 
                 if (!params.DO_RELEASE) {
-                    now = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true)
+                    now = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true).trim()
 
                 } else {
                     now = params.RELEASE_VERSION
                 }
 
                 sh "echo tag ${now}"
-                
+
                 sh "tag=${now} docker-compose build"
 
                 sh "tag=${now} docker-compose push"
