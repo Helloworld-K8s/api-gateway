@@ -89,6 +89,8 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                     now = params.RELEASE_VERSION
                 }
 
+                sh "echo tag ${now}"
+                
                 sh "tag=${now} docker-compose build"
 
                 sh "tag=${now} docker-compose push"
