@@ -1,5 +1,4 @@
-@Library('deploy-library')
-import com.softeam.deploy.DeployHelper
+@Library('deploy-library') import com.softeam.deploy.DeployHelper
 
 def utils = new DeployHelper(this)
 
