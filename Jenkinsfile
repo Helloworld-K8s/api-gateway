@@ -59,7 +59,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                             sh 'gradle clean build publish -Dsonar.login=${token}'
                         } else {
 
-                            DeployHelper.instance().configureGIT()
+                            DeployHelper.instance.configureGIT()
 
                             sh "gradle release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${params.RELEASE_VERSION} -Prelease.newVersion=${params.NEXT_DEV_VERSION}"
                         }
@@ -89,9 +89,9 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
                     now = params.RELEASE_VERSION
                 }
 
-                sh "tag=${params.RELEASE_VERSION} docker-compose build"
+                sh "tag=${now} docker-compose build"
 
-                sh "tag=${params.RELEASE_VERSION} docker-compose push"
+                sh "tag=${now} docker-compose push"
             }
         }
 
