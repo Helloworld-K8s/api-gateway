@@ -72,15 +72,7 @@ podTemplate(label: 'api-gateway-pod', nodeSelector: 'medium', containers: [
 
             stage('BUILD DOCKER IMAGE') {
 
-                sh 'mkdir /etc/docker'
-
-                // le registry est insecure (pas de https)
-                sh 'echo {"insecure-registries" : ["registry.k8.wildwidewest.xyz"]} > /etc/docker/daemon.json'
-
-                withCredentials([usernamePassword(credentialsId: 'nexus_user', usernameVariable: 'username', passwordVariable: 'password')]) {
-
-                    sh "docker login -u ${username} -p ${password} registry.k8.wildwidewest.xyz"
-                }
+                DeployHelper.instance.configureDockerRegistry()
 
                 if (!params.DO_RELEASE) {
                     now = sh (script: 'cat version.properties | cut -d= -f2', returnStdout: true)
